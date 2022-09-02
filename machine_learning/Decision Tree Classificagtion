@@ -1,0 +1,697 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "b3bafcfc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "80d21f51",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dataset = pd.read_csv(\"customized_daily_rainfall_data.csv\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "2e490d37",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>StationIndex</th>\n",
+       "      <th>Year</th>\n",
+       "      <th>Month</th>\n",
+       "      <th>Day</th>\n",
+       "      <th>Rainfall</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>1970</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1</td>\n",
+       "      <td>1970</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>1</td>\n",
+       "      <td>1970</td>\n",
+       "      <td>1</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>1</td>\n",
+       "      <td>1970</td>\n",
+       "      <td>1</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>1</td>\n",
+       "      <td>1970</td>\n",
+       "      <td>1</td>\n",
+       "      <td>5</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>542371</th>\n",
+       "      <td>35</td>\n",
+       "      <td>2016</td>\n",
+       "      <td>12</td>\n",
+       "      <td>27</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>542372</th>\n",
+       "      <td>35</td>\n",
+       "      <td>2016</td>\n",
+       "      <td>12</td>\n",
+       "      <td>28</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>542373</th>\n",
+       "      <td>35</td>\n",
+       "      <td>2016</td>\n",
+       "      <td>12</td>\n",
+       "      <td>29</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>542374</th>\n",
+       "      <td>35</td>\n",
+       "      <td>2016</td>\n",
+       "      <td>12</td>\n",
+       "      <td>30</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>542375</th>\n",
+       "      <td>35</td>\n",
+       "      <td>2016</td>\n",
+       "      <td>12</td>\n",
+       "      <td>31</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>542376 rows × 5 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        StationIndex  Year  Month  Day  Rainfall\n",
+       "0                  1  1970      1    1         0\n",
+       "1                  1  1970      1    2         0\n",
+       "2                  1  1970      1    3         0\n",
+       "3                  1  1970      1    4         0\n",
+       "4                  1  1970      1    5         0\n",
+       "...              ...   ...    ...  ...       ...\n",
+       "542371            35  2016     12   27         0\n",
+       "542372            35  2016     12   28         0\n",
+       "542373            35  2016     12   29         0\n",
+       "542374            35  2016     12   30         0\n",
+       "542375            35  2016     12   31         0\n",
+       "\n",
+       "[542376 rows x 5 columns]"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "05e573c0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>StationIndex</th>\n",
+       "      <th>Year</th>\n",
+       "      <th>Month</th>\n",
+       "      <th>Day</th>\n",
+       "      <th>Rainfall</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>542376.000000</td>\n",
+       "      <td>542376.000000</td>\n",
+       "      <td>542376.000000</td>\n",
+       "      <td>542376.00000</td>\n",
+       "      <td>542376.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>mean</th>\n",
+       "      <td>17.793553</td>\n",
+       "      <td>1994.757888</td>\n",
+       "      <td>6.500000</td>\n",
+       "      <td>16.00000</td>\n",
+       "      <td>6.432772</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>std</th>\n",
+       "      <td>10.012240</td>\n",
+       "      <td>13.115871</td>\n",
+       "      <td>3.452056</td>\n",
+       "      <td>8.94428</td>\n",
+       "      <td>19.000804</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>min</th>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>1970.000000</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>1.00000</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>25%</th>\n",
+       "      <td>9.000000</td>\n",
+       "      <td>1984.000000</td>\n",
+       "      <td>3.750000</td>\n",
+       "      <td>8.00000</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>50%</th>\n",
+       "      <td>18.000000</td>\n",
+       "      <td>1995.000000</td>\n",
+       "      <td>6.500000</td>\n",
+       "      <td>16.00000</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>75%</th>\n",
+       "      <td>26.000000</td>\n",
+       "      <td>2006.000000</td>\n",
+       "      <td>9.250000</td>\n",
+       "      <td>24.00000</td>\n",
+       "      <td>2.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>max</th>\n",
+       "      <td>35.000000</td>\n",
+       "      <td>2016.000000</td>\n",
+       "      <td>12.000000</td>\n",
+       "      <td>31.00000</td>\n",
+       "      <td>590.000000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        StationIndex           Year          Month           Day  \\\n",
+       "count  542376.000000  542376.000000  542376.000000  542376.00000   \n",
+       "mean       17.793553    1994.757888       6.500000      16.00000   \n",
+       "std        10.012240      13.115871       3.452056       8.94428   \n",
+       "min         1.000000    1970.000000       1.000000       1.00000   \n",
+       "25%         9.000000    1984.000000       3.750000       8.00000   \n",
+       "50%        18.000000    1995.000000       6.500000      16.00000   \n",
+       "75%        26.000000    2006.000000       9.250000      24.00000   \n",
+       "max        35.000000    2016.000000      12.000000      31.00000   \n",
+       "\n",
+       "            Rainfall  \n",
+       "count  542376.000000  \n",
+       "mean        6.432772  \n",
+       "std        19.000804  \n",
+       "min         0.000000  \n",
+       "25%         0.000000  \n",
+       "50%         0.000000  \n",
+       "75%         2.000000  \n",
+       "max       590.000000  "
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dataset.describe()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "1fb1a024",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X = dataset.iloc[:,:-1].values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "a4067915",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[   1, 1970,    1,    1],\n",
+       "       [   1, 1970,    1,    2],\n",
+       "       [   1, 1970,    1,    3],\n",
+       "       ...,\n",
+       "       [  35, 2016,   12,   29],\n",
+       "       [  35, 2016,   12,   30],\n",
+       "       [  35, 2016,   12,   31]])"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "d9c30db3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "y = dataset.iloc[:,-1].values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "81071e57",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0, 0, 0, ..., 0, 0, 0])"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "9f96d4b4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.model_selection import train_test_split"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "c904358a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "b22697f4",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[  24, 1996,    3,    3],\n",
+       "       [  15, 2008,   11,   19],\n",
+       "       [  15, 1985,    8,    3],\n",
+       "       ...,\n",
+       "       [  18, 1994,    6,   12],\n",
+       "       [   9, 1988,    4,   23],\n",
+       "       [   2, 2003,    4,   28]])"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X_train"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "c1f4e05a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[  28, 2009,    5,    9],\n",
+       "       [  27, 1975,   10,   31],\n",
+       "       [  33, 1971,   11,    4],\n",
+       "       ...,\n",
+       "       [  17, 1995,    2,    5],\n",
+       "       [  24, 1998,    6,   29],\n",
+       "       [   1, 1976,   12,    5]])"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X_test"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "55d8d069",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([ 0,  0, 50, ..., 16,  0,  5])"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y_train"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "99550f2b",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([ 0, 15,  0, ...,  0, 12,  0])"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y_test"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "31024f2e",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "DecisionTreeClassifier(criterion='entropy', random_state=0)"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from sklearn.tree import DecisionTreeClassifier\n",
+    "classifier = DecisionTreeClassifier(criterion=\"entropy\", random_state=0)\n",
+    "classifier.fit(X_train, y_train)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "e44df6fe",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([5])"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "classifier.predict([[   2, 2003,    4,   28]])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "a0df39df",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "y_pred = classifier.predict(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "id": "a79a4925",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([ 0,  0, 38, ...,  0,  3,  0])"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y_pred"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "id": "fdd63487",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[ 0,  0],\n",
+       "       [ 0, 15],\n",
+       "       [38,  0],\n",
+       "       ...,\n",
+       "       [ 0,  0],\n",
+       "       [ 3, 12],\n",
+       "       [ 0,  0]])"
+      ]
+     },
+     "execution_count": 33,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "np.concatenate((y_pred.reshape(len(y_pred),1), y_test.reshape(len(y_test),1)),1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "id": "6ae74eb7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.metrics import confusion_matrix, accuracy_score"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "id": "6b3c4532",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "cm = confusion_matrix(y_test, y_pred)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "id": "3dd400ad",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[94473,  2705,  1778, ...,     0,     0,     0],\n",
+       "       [ 2113,   480,   290, ...,     0,     0,     0],\n",
+       "       [ 1427,   326,   235, ...,     0,     0,     0],\n",
+       "       ...,\n",
+       "       [    0,     0,     0, ...,     0,     0,     0],\n",
+       "       [    0,     0,     0, ...,     0,     0,     0],\n",
+       "       [    0,     0,     0, ...,     0,     0,     0]])"
+      ]
+     },
+     "execution_count": 36,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "cm"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "id": "2bd22bbf",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.5899528617873188"
+      ]
+     },
+     "execution_count": 37,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "accuracy_score(y_test, y_pred)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9b1ba144",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
